@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SQL Lesson 1: the four keywords behind every report</title>
+<style>
+:root{--bg:#F8FAFC;--card:#fff;--ink:#0F172A;--mute:#64748B;--line:#E2E8F0;--teal:#0D9488;--amber:#B45309;--code:#F1F5F9;--chip:#CCFBF1;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F172A;--card:#1E293B;--ink:#F1F5F9;--mute:#94A3B8;--line:#334155;--teal:#2DD4BF;--amber:#FCD34D;--code:#0B1220;--chip:#134E4A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F172A;--card:#1E293B;--ink:#F1F5F9;--mute:#94A3B8;--line:#334155;--teal:#2DD4BF;--amber:#FCD34D;--code:#0B1220;--chip:#134E4A;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Carlito,Calibri,system-ui,sans-serif;line-height:1.5}
+.w{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 18px}
+.by{font-size:14px;color:var(--mute)}
+.by a{color:var(--teal);text-decoration:none;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.lbl{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;color:var(--amber);font-size:14px}
+.hint{color:var(--mute);font-size:13px;margin:2px 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+button,select,input[type=number]{font:inherit;color:var(--ink)}
+.chip{border:1px solid var(--line);background:var(--card);padding:6px 12px;border-radius:999px;cursor:pointer;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.chip.on{background:var(--chip);border-color:var(--teal);color:var(--teal);font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+select,input[type=number]{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+pre{margin:0;background:var(--code);border-radius:10px;padding:14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;overflow-x:auto;line-height:1.7}
+.k{color:var(--teal);font-weight:700}.n{color:var(--amber)}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.st{border:1px dashed var(--line);border-radius:10px;padding:8px 10px;font-size:13px}
+.st b{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--teal)}
+.st.off{opacity:.45}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--teal);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.cnt{color:var(--mute);font-size:13px;margin-top:6px}
+.warn{color:var(--amber);font-size:14px;margin-top:8px;font-weight:700}
+footer{text-align:center;color:var(--mute);font-size:13px;margin-top:20px}
+footer a{color:var(--teal);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>SQL Lesson 1: the four keywords behind every report I’ve ever built</h1>
+<p class="sub">A hospitality analytics series, one tool at a time. SELECT · FROM · ORDER BY · LIMIT. Click the controls and watch each step change the query.</p>
+<p class="by">Built by <b>Mohamed Al Razek</b> · <a href="https://www.linkedin.com/in/mohamed-al-razek-950a00104/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/MOO242" target="_blank" rel="noopener">GitHub</a></p>
+
+<div class="card">
+<div class="lbl">SELECT</div><div class="hint">Which columns do you want back?</div>
+<div class="chips" id="cols"></div>
+</div>
+
+<div class="card">
+<div class="lbl">FROM</div><div class="hint">Which table holds the data? (hotel_performance: 12 hotels, illustrative sample data.)</div>
+<div class="chips"><span class="chip on">hotel_performance</span></div>
+</div>
+
+<div class="card">
+<div class="lbl">ORDER BY</div><div class="hint">Sort the rows. Without it, row order isn’t guaranteed, and that’s how wrong numbers end up in a leadership deck.</div>
+<div class="row">
+<select id="ob"></select>
+<button class="chip on" id="dir">DESC</button>
+</div>
+</div>
+
+<div class="card">
+<div class="lbl">LIMIT</div><div class="hint">Keep only the first N rows (after sorting).</div>
+<div class="row">
+<label><input type="checkbox" id="lu" checked> use LIMIT</label>
+<input type="range" id="lr" min="1" max="12" value="5">
+<input type="number" id="ln" min="1" max="12" value="5" style="width:70px">
+</div>
+</div>
+
+<div class="card">
+<div class="lbl">YOUR QUERY</div>
+<pre id="sql"></pre>
+<div class="hint" id="read" style="margin-top:8px"></div>
+</div>
+
+<div class="card">
+<div class="lbl">HOW THE DATABASE READS IT</div>
+<div class="hint">💡 You write SELECT first, but the database reads FROM first: it loads the table, picks the columns, sorts the rows, then cuts them down.</div>
+<div class="flow" id="flow"></div>
+</div>
+
+<div class="card">
+<div class="lbl">RESULT</div>
+<div class="tw"><table id="tb"></table></div>
+<div class="cnt" id="cnt"></div>
+<div class="warn" id="warn"></div>
+</div>
+
+<footer>Made by Mohamed Al Razek · <a href="https://www.linkedin.com/in/mohamed-al-razek-950a00104/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/MOO242" target="_blank" rel="noopener">GitHub</a> · Follow for the next SQL lesson</footer>
+</div>
+<script>
+const C=['hotel_id','hotel_name','city','adr','occupancy_pct','revpar'];
+const D=[
+[1,'Marina Crest','Dubai',520,82,426],[2,'Desert Palm','Abu Dhabi',410,76,312],[3,'Oasis Garden','Al Ain',290,68,197],
+[4,'Nile Corniche','Cairo',240,71,170],[5,'Pyramids Gate','Cairo',205,64,131],[6,'Old Town Square','Warsaw',310,74,229],
+[7,'Vistula Point','Warsaw',275,69,190],[8,'Creek Side','Dubai',460,79,363],[9,'Corniche Tower','Abu Dhabi',380,72,274],
+[10,'Gulf Pearl','Sharjah',260,66,172],[11,'Skyline Business','Dubai',395,85,336],[12,'Alexandria Bay','Alexandria',190,61,116]];
+let sel=new Set(['hotel_name','revpar']),desc=true;
+const $=id=>document.getElementById(id);
+const colsEl=$('cols'),ob=$('ob');
+ob.innerHTML='<option value="">(none)</option>'+C.map(c=>`<option>${c}</option>`).join('');
+ob.value='revpar';
+function mk(){
+ colsEl.innerHTML='';
+ const all=document.createElement('button');all.className='chip'+(sel.size===C.length?' on':'');all.textContent='*';
+ all.onclick=()=>{sel=new Set(C);mk();go()};colsEl.appendChild(all);
+ C.forEach(c=>{const b=document.createElement('button');b.className='chip'+(sel.has(c)?' on':'');b.textContent=c;
+  b.onclick=()=>{if(sel.has(c)){if(sel.size>1)sel.delete(c)}else sel.add(c);mk();go()};colsEl.appendChild(b)});
+}
+function go(){
+ const cols=C.filter(c=>sel.has(c)),o=ob.value,lu=$('lu').checked;
+ let n=+$('ln').value||1;n=Math.max(1,Math.min(12,n));
+ const star=cols.length===C.length;
+ $('sql').innerHTML='<span class="k">SELECT</span> '+(star?'*':cols.join(', '))+'\n<span class="k">FROM</span> hotel_performance'
+  +(o?'\n<span class="k">ORDER BY</span> '+o+' '+(desc?'DESC':'ASC'):'')
+  +(lu?'\n<span class="k">LIMIT</span> <span class="n">'+n+'</span>':'')+';';
+ let rows=D.slice();
+ if(o){const i=C.indexOf(o);rows.sort((a,b)=>{const x=a[i],y=b[i];const r=typeof x==='number'?x-y:String(x).localeCompare(y);return desc?-r:r})}
+ const total=rows.length;
+ if(lu)rows=rows.slice(0,n);
+ const idx=cols.map(c=>C.indexOf(c));
+ $('tb').innerHTML='<tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr>'+rows.map(r=>'<tr>'+idx.map(i=>`<td>${r[i]}</td>`).join('')+'</tr>').join('');
+ $('cnt').textContent=rows.length+' of '+total+' rows · '+cols.length+' of '+C.length+' columns';
+ $('flow').innerHTML=[
+  ['1. FROM','Load the table: 12 rows × 6 columns',1],
+  ['2. SELECT','Keep '+cols.length+' column'+(cols.length>1?'s':''),1],
+  ['3. ORDER BY',o?'Sort by '+o+' '+(desc?'high → low':'low → high'):'Skipped: no sorting',!!o],
+  ['4. LIMIT',lu?'Keep the first '+n+' row'+(n>1?'s':''):'Skipped: all rows stay',lu]
+ ].map(s=>`<div class="st${s[2]?'':' off'}"><b>${s[0]}</b>${s[1]}</div>`).join('');
+ $('dir').textContent=desc?'DESC':'ASC';
+ $('warn').textContent=(lu&&!o)?'⚠️ LIMIT without ORDER BY gives you “some hotels”, not “the top hotels”.':'';
+ $('read').textContent='Read it like a sentence: “From hotel performance, give me '+(star?'every column':cols.join(', '))+(o?', '+(desc?'highest':'lowest')+' '+o+' first':'')+(lu?', top '+n:'')+'.”';
+}
+$('dir').onclick=()=>{desc=!desc;go()};
+ob.onchange=go;$('lu').onchange=go;
+$('lr').oninput=e=>{$('ln').value=e.target.value;go()};
+$('ln').oninput=e=>{let v=Math.max(1,Math.min(12,+e.target.value||1));$('lr').value=v;go()};
+mk();go();
+</script>
+</body>
+</html>
