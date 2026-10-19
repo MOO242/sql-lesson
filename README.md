@@ -3,7 +3,7 @@
 A free, hands-on SQL series built from nearly a decade in hotel revenue and commercial operations.
 One tool at a time. Short lessons. Interactive demos you can click through.
 
-**Live demo:** https://moo242.github.io/learn-sql-hospitality-analytics/
+**Live demo:** [https://moo242.github.io/learn-sql-hospitality-analytics/](https://moo242.github.io/sql-lessons/)
 
 ---
 
