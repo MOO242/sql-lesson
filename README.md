@@ -3,7 +3,7 @@
 A free, hands-on SQL series built from nearly a decade in hotel revenue and commercial operations.
 Short lessons, real hospitality examples (hotels, RevPAR, ADR, reservations), and interactive demos you can click through.
 
-**Live demo:** moo242.github.io/learn-sql-hospitality-analytics
+**Live demo:** [moo242.github.io/learn-sql-hospitality-analytics](https://moo242.github.io/sql-lessons/)
 
 **Works in:** Snowflake and PostgreSQL. Every query in this series runs in both, and dialect differences are called out where they matter.
 
