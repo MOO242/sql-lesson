@@ -48,7 +48,7 @@ Runs as-is in both Snowflake and PostgreSQL.
 | # | Lesson | Topics | Status |
 | --- | --- | --- | --- |
 | 1 | The four keywords | `SELECT`, `FROM`, `ORDER BY`, `LIMIT` | ✅ Done |
-| 2 | Filtering rows | `WHERE`, comparison operators | 🔜 Next |
+| 2 | Filtering rows | `WHERE`, comparison operators | ✅ Done |
 | 3 | Combining conditions | `AND`, `OR`, `NOT` | Planned |
 | 4 | Ranges, lists, and patterns | `BETWEEN`, `IN`, `LIKE`, `ILIKE` | Planned |
 | 5 | Unique rows | `DISTINCT` | Planned |
