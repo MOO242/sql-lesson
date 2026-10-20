@@ -77,7 +77,7 @@ New lessons are added as they are released. Star or watch the repo to follow alo
 I'm **Mohamed Al Razek**, a Business Applications Analyst based in Dubai, with nearly a decade in hotel revenue management, reservations, and commercial operations. This series teaches SQL the way it's used in real hospitality analytics, one practical lesson at a time.
 
 - 🎥 YouTube: [@MohamedAlRazek](https://www.youtube.com/@MohamedAlRazek)
-- 💼 LinkedIn: [Mohamed Al Razek](https://www.linkedin.com/in/YOUR-LINKEDIN-HANDLE)
+- 💼 LinkedIn: [Mohamed Al Razek](https://www.linkedin.com/in/mohamed-al-razek-950a00104/?isSelfProfile=true)
 - 🐙 GitHub: [MOO242](https://github.com/MOO242)
 
 If this series helps you, a ⭐ on the repo is appreciated.
