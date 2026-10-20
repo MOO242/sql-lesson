@@ -33,6 +33,8 @@ Read it like a sentence: *“From hotel performance, give me the hotel and its R
 
 `index.html` is a single-file demo with no install and no dependencies.
 
+**Live demo:** [moo242.github.io/learn-sql-hospitality-analytics](https://moo242.github.io/sql-lessons/)
+
 - Toggle columns for `SELECT`
 - Choose an `ORDER BY` column and flip `ASC` / `DESC`
 - Turn `LIMIT` on and off and change the number
