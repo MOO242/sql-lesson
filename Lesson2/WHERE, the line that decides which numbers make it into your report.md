@@ -76,6 +76,26 @@ Both databases behave the same way here:
 
 ---
 
+## The Interactive Tool
+
+`index.html` is a single-file demo with no install and no dependencies.
+
+**Live demo:** [moo242.github.io/learn-sql-hospitality-analytics](https://moo242.github.io/sql-lessons/)
+
+What you can do in it:
+
+- Toggle columns for `SELECT`
+- Choose an `ORDER BY` column and flip `ASC` / `DESC`
+- Turn `LIMIT` on and off and change the number
+- Watch the query, the step-by-step logic, and the result table update live
+
+**To run it locally:** download `index.html` and open it in any browser.
+
+> [!NOTE]
+> The data (`hotel_performance`, 12 hotels) is fictional sample data created for teaching. It is not real property data.
+
+---
+
 ## Next Lesson
 
 **Lesson 3: `AND`, `OR`, `NOT`**, and the missing brackets that can overstate revenue.
