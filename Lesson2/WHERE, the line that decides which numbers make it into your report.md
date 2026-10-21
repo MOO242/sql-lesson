@@ -80,7 +80,7 @@ Both databases behave the same way here:
 
 `index.html` is a single-file demo with no install and no dependencies.
 
-**Live demo:** [moo242.github.io/learn-sql-hospitality-analytics](https://moo242.github.io/sql-lessons/)
+**Live demo:** [moo242.github.io/learn-sql-hospitality-analytics](file:///C:/Users/moham/OneDrive/Desktop/index.html)
 
 What you can do in it:
 
