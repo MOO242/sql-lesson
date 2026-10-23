@@ -5,7 +5,7 @@ Short lessons, real hospitality examples (hotels, RevPAR, ADR, reservations), an
 
 **Works in:** Snowflake and PostgreSQL. Every query in this series runs in both, and dialect differences are called out where they matter.
 
-▶️ **Watch the lessons:** [YouTube channel](https://www.youtube.com/@MohamedAlRazek) SOON
+▶️ **Watch the lessons ON :** [YouTube channel](https://www.youtube.com/@MohamedAlRazek) SOON
 
 ---
 
