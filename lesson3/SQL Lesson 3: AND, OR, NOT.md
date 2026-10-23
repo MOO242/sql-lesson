@@ -1,30 +1,31 @@
-# SQL Lesson 3: AND, OR, NOT
+# Lesson 3: AND, OR, NOT — Combining Conditions
 
-Part of **SQL for Hospitality Analytics**. Small logic mistakes can change the entire report.
+In nearly a decade of hotel revenue work, I've learned that a query that runs is not the same as a query that's right. The scariest mistakes don't throw an error. They just return the wrong rows.
 
-**Try it live:** [Logic Lab, the interactive tool](https://moo242.github.io/sql-lessons/lesson3/)
+Most real filters need more than one condition. That's the job of `AND`, `OR` and `NOT`.
 
-All queries work in **Snowflake** and **PostgreSQL**.
+---
 
-## What this lesson covers
+## What They Do
 
-| Operator | Meaning |
-|---|---|
-| `AND` | Both conditions must be true |
-| `OR` | At least one condition must be true |
-| `NOT` | Reverses a condition |
+In reporting we rarely filter on a single condition. We might need confirmed reservations, from a specific market, above a revenue value, from particular market segments.
 
-In hotel revenue work we rarely filter on one condition. We usually need confirmed reservations, from a specific market, above a revenue value, from particular market segments. That is where AND, OR and NOT come in.
+| Operator | Meaning                              |
+|:--------:|--------------------------------------|
+| `AND`    | Both conditions must be true         |
+| `OR`     | At least one condition must be true  |
+| `NOT`    | Reverses a condition                 |
 
-## The example query
+---
+
+## Example
 
 ```sql
-SELECT
-  confirmation_no,
-  hotel_name,
-  arrival_date,
-  room_revenue,
-  market_segment
+SELECT confirmation_no,
+       hotel_name,
+       arrival_date,
+       room_revenue,
+       market_segment
 FROM reservations
 WHERE booking_status = 'Confirmed'
   AND country = 'UAE'
@@ -34,85 +35,83 @@ ORDER BY room_revenue DESC
 LIMIT 10;
 ```
 
-Read it like a sentence: *"From reservations, keep only confirmed bookings in the UAE that are either Transient or Group, then show me the 10 with the highest room revenue."*
+Read it like a sentence:
 
-## The brackets matter
-
-After comparisons like `=` and `>`, SQL evaluates **NOT first, then AND, then OR**. When AND and OR appear together, add brackets so the business logic is explicit and anyone reviewing the query can see what belongs together.
-
-## The trap: missing brackets
-
-```sql
-WHERE country = 'UAE'
-  AND market_segment = 'Transient'
-  OR market_segment = 'Group'
-```
-
-This does **not** mean "UAE bookings that are Transient or Group". Because AND binds tighter than OR, SQL reads it as:
-
-```sql
-WHERE (country = 'UAE' AND market_segment = 'Transient')
-  OR market_segment = 'Group'
-```
-
-Now every Group booking qualifies, including bookings outside the UAE.
-
-The query runs. There is no syntax error. But the business answer is wrong.
-
-**A query can run successfully and still give you the wrong answer.**
-
-## Run it yourself
-
-Sample data is fictional. Works as is in Snowflake and PostgreSQL.
-
-```sql
-CREATE TABLE reservations (
-  confirmation_no VARCHAR(10),
-  hotel_name      VARCHAR(60),
-  arrival_date    DATE,
-  country         VARCHAR(20),
-  market_segment  VARCHAR(20),
-  booking_status  VARCHAR(20),
-  room_revenue    NUMERIC(10,2)
-);
-
-INSERT INTO reservations VALUES
-('CN-1001','Palm Crest Hotel Dubai',          '2026-11-01','UAE',  'Transient','Confirmed',18400),
-('CN-1002','Skyline Grand DIFC',              '2026-11-02','UAE',  'Group',    'Confirmed',52600),
-('CN-1003','Corniche Breeze Abu Dhabi',       '2026-11-03','UAE',  'Corporate','Confirmed', 7900),
-('CN-1004','Skyline Grand DIFC',              '2026-11-04','UAE',  'Transient','Cancelled',12300),
-('CN-1005','Desert Rose Riyadh',              '2026-11-05','KSA',  'Group',    'Confirmed',41800),
-('CN-1006','Pearl Bay Doha',                  '2026-11-06','Qatar','Group',    'Confirmed',36500),
-('CN-1007','Nile Terrace Cairo',              '2026-11-07','Egypt','Transient','Confirmed', 6200),
-('CN-1008','Oasis Haven Al Ain',              '2026-11-08','UAE',  'Group',    'Confirmed',22100),
-('CN-1009','Saadiyat Lumen Abu Dhabi',        '2026-11-09','UAE',  'Transient','Confirmed',15800),
-('CN-1010','Red Sea Pavilion Jeddah',         '2026-11-10','KSA',  'Group',    'Cancelled',29900),
-('CN-1011','Emirates Gate Hotel',             '2026-11-11','UAE',  'Wholesale','Confirmed', 9400),
-('CN-1012','Gulf of Oman Retreat Muscat',     '2026-11-12','Oman', 'Group',    'Confirmed',27300),
-('CN-1013','Marina Tide Dubai',               '2026-11-13','UAE',  'Group',    'Cancelled',31200),
-('CN-1014','Pyramid View Cairo',              '2026-11-14','Egypt','Corporate','Confirmed', 5100),
-('CN-1015','West Bay Regency Doha',           '2026-11-15','Qatar','Transient','Confirmed',24800),
-('CN-1016','Green Oasis Dubai',               '2026-11-16','UAE',  'Transient','Confirmed', 8700);
-```
-
-Run the example query above. It returns 5 rows. Now remove the brackets:
-
-```sql
-SELECT confirmation_no, hotel_name, country, market_segment, booking_status, room_revenue
-FROM reservations
-WHERE booking_status = 'Confirmed'
-  AND country = 'UAE'
-  AND market_segment = 'Transient'
-  OR market_segment = 'Group'
-ORDER BY room_revenue DESC;
-```
-
-It returns 10 rows: the same 5, plus 5 Group bookings that should not qualify (two from KSA, one each from Qatar and Oman, and a cancelled one in the UAE). No error, wrong answer.
-
-## Next lesson
-
-BETWEEN, IN and LIKE: three cleaner ways to filter ranges, lists and patterns.
+> "From reservations, keep only confirmed bookings in the UAE that are either Transient or Group, then show me the 10 with the highest room revenue."
 
 ---
 
-Created by **Mohamed Al Razek** · [LinkedIn](https://www.linkedin.com/in/mohamed-al-razek-950a00104/) · [GitHub](https://github.com/MOO242)
+## Remember the Order of Evaluation
+
+> [!TIP]
+> After comparisons like `=` and `>`, SQL evaluates `NOT` first, then `AND`, then `OR`.
+> When `AND` and `OR` appear together, use brackets to make the business logic explicit. Anyone reviewing the query can then see what belongs together.
+
+```sql
+AND (market_segment = 'Transient'
+     OR market_segment = 'Group')
+```
+
+---
+
+## The Missing Brackets Trap
+
+> [!WARNING]
+> Here's the trap I see in real work. This looks like "UAE bookings that are Transient or Group":
+>
+> ```sql
+> WHERE country = 'UAE'
+>   AND market_segment = 'Transient'
+>   OR market_segment = 'Group'
+> ```
+>
+> It isn't. Because `AND` binds tighter than `OR`, SQL reads it as:
+>
+> ```sql
+> WHERE (country = 'UAE' AND market_segment = 'Transient')
+>    OR market_segment = 'Group'
+> ```
+>
+> Now every Group booking qualifies, including bookings outside the UAE.
+>
+> The query runs. There's no syntax error. But the business answer is wrong.
+>
+> **A query can run successfully and still give you the wrong answer.**
+
+---
+
+## Snowflake vs. PostgreSQL
+
+Both databases behave the same way here:
+
+- Both follow the same `NOT` → `AND` → `OR` precedence, so the queries above work in either one.
+- Text comparisons are **case-sensitive**: `'Confirmed'` and `'confirmed'` do not match.
+
+---
+
+## The Interactive Tool
+
+`index.html` is a single-file demo with no install and no dependencies.
+
+**Live demo:** [moo242.github.io/sql-lessons/lesson3](https://moo242.github.io/sql-lessons/lesson3/)
+
+What you can do in it:
+
+- Start from a preset: with brackets, missing brackets, using `NOT`, or `OR` everywhere
+- Add `NOT` to any condition and switch between `AND` and `OR`
+- Put brackets around any group of conditions
+- See the query you wrote next to how SQL actually reads it
+- Watch the result table flag rows that wrongly qualify or go missing
+
+**To run it locally:** download `index.html` and open it in any browser.
+
+**To run the SQL yourself:** [`reservations.sql`](reservations.sql) creates the table and loads the sample rows. The query with brackets returns 5 rows. Remove the brackets and it returns 10, because Group bookings from KSA, Qatar and Oman, plus cancelled ones, slip in.
+
+> [!NOTE]
+> The data (`reservations`, 16 rows) is fictional sample data created for teaching. It is not real property data.
+
+---
+
+## Next Lesson
+
+**Lesson 4: `BETWEEN`, `IN`, `LIKE`**, three cleaner ways to filter ranges, lists and patterns.
